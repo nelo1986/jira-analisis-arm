@@ -13,7 +13,7 @@ services:
       - "5432:5432"
 
   superset:
-    image: superset-arm64
+    image: nelo86/superset-arm64
     container_name: superset
     depends_on:
       - superset-db
@@ -25,5 +25,51 @@ services:
       - ./superset_home:/app/superset_home
     entrypoint: ["/usr/bin/run-server.sh"]
 
+  airflow-db:
+    image: postgres:15
+    container_name: airflow-db
+    restart: always
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    volumes:
+      - airflow_db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  airflow:
+    image: nelo86/airflow-arm64
+    container_name: airflow
+    depends_on:
+      - airflow-db
+    ports:
+      - "8080:8080"
+    environment:
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      - AIRFLOW__WEBSERVER__SECRET_KEY=airflowsecret
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__WEBSERVER__SESSION_COOKIE_NAME=airflow_session
+      - AIRFLOW_CONN_POSTGRES_JIRA=postgresql://jirauser:secret@jira-db:5432/jira
+     # - AIRFLOW__WEBSERVER__BASE_URL=http://localhost/airflow
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+    entrypoint: ["/entrypoint.sh"]
+    restart: always
+  jira-db:
+    image: postgres:15
+    container_name: jira-db
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: jirauser
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - jira_db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
 volumes:
   superset_db_data:
+  airflow_db_data:
+  jira_db_data:
+

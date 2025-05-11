@@ -8,3 +8,5 @@ AWS_REGION_NAME = "eu-west-1"
 S3_ENDPOINT_URL = "http://172.18.0.6:4566"
 #SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://superset:secretsecret@superset-database:5432/superset'
 SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://superset:secret@superset-db:5432/superset"
+SESSION_COOKIE_NAME = "superset_session"
+#WEBSERVER_BASEURL = "http://localhost/superset"
