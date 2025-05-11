@@ -1,0 +1,29 @@
+services:
+  superset-db:
+    image: postgres:15
+    container_name: superset-db
+    restart: always
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - superset_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  superset:
+    image: superset-arm64
+    container_name: superset
+    depends_on:
+      - superset-db
+    environment:
+      - SUPERSET_CONFIG_PATH=/app/superset_config.py
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./superset_home:/app/superset_home
+    entrypoint: ["/usr/bin/run-server.sh"]
+
+volumes:
+  superset_db_data:
