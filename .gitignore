@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+env/
+venv/
+*.egg-info/
+
+# VSCode / IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Docker
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.coverage
+**/.dockerignore
+docker-compose.override.yml
+superset_home/
+airflow/logs/
+
+# OS
+.DS_Store
+
+# Git
+*.swp
+
+# Misc
+superset/venv/
